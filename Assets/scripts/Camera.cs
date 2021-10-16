@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-public class Camera : MonoBehaviour, IPointerClickHandler
+public class Camera : MonoBehaviour
 {
     [SerializeField] private Character _character;
 
@@ -13,15 +12,10 @@ public class Camera : MonoBehaviour, IPointerClickHandler
 
     public Outline SelectedItem { get; private set; } = null;
 
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        int clickCount = eventData.clickCount;
-        OnMultiClick(clickCount);
-    }
 
-    void OnMultiClick(int i)
+    void OnMultiClick()
     {
-        if(i <= 0)
+        if(clickCounter <= 0)
         {
             return;
         }
@@ -47,7 +41,7 @@ public class Camera : MonoBehaviour, IPointerClickHandler
         {
             return;
         }
-        if (i >= 2)
+        if (clickCounter >= 2)
         {
             _character.MovingSpeed = _character.FastRunning;
             _character.AnimationFasterRun();
@@ -86,7 +80,7 @@ public class Camera : MonoBehaviour, IPointerClickHandler
                 }
             }
             lastClickTime = currentTime;
-            OnMultiClick(clickCounter);
+            OnMultiClick();
         }
     }
 }
