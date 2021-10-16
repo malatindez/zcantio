@@ -28,8 +28,9 @@ public class Camera : MonoBehaviour, IPointerClickHandler
 
         Ray ray = GetComponent<UnityEngine.Camera>().ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
+        
 
-        if (Physics.Raycast(ray, out hit) && hit.collider.gameObject.TryGetComponent<Item>(out Item item))
+        if (Physics.Raycast(ray, out hit) && hit.collider.gameObject.TryGetComponent<Interactible>(out Interactible item))
         {
             if (SelectedItem != null)
             {
@@ -42,18 +43,19 @@ public class Camera : MonoBehaviour, IPointerClickHandler
         {
             SelectedItem.enabled = false;
         }
-
-        if (i >= 4)
+        if (hit.collider == null)
         {
-            _character.MovingSpeed = Character.FastRunning;
+            return;
         }
-        else if (i >= 2)
+        if (i >= 2)
         {
-            _character.MovingSpeed = Character.Running;
+            _character.MovingSpeed = _character.FastRunning;
+            _character.AnimationFasterRun();
         }
         else
         {
-            _character.MovingSpeed = Character.Walking;
+            _character.MovingSpeed = _character.Running;
+            _character.AnimationRun();
         }
         _character.TargetPosition = hit.point;
     }

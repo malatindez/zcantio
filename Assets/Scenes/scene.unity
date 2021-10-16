@@ -238,6 +238,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10d2490e61fba854987af1a43df6b1a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Running: 7.5
+  FastRunning: 20
+  ReachDistance: 0.1
+  MovingSpeed: 0
+  isRightSide: 1
+  animator: {fileID: 0}
+  Delay: 0.15
 --- !u!1 &835433200
 GameObject:
   m_ObjectHideFlags: 0
