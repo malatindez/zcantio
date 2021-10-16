@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Interactible : MonoBehaviour
+public class Interactable : MonoBehaviour
 {
     Outline Outline;
     // Start is called before the first frame update

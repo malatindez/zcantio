@@ -24,7 +24,7 @@ public class Camera : MonoBehaviour
         RaycastHit hit;
         
 
-        if (Physics.Raycast(ray, out hit) && hit.collider.gameObject.TryGetComponent<Interactible>(out Interactible item))
+        if (Physics.Raycast(ray, out hit) && hit.collider.gameObject.TryGetComponent<Interactable>(out Interactable item))
         {
             if (SelectedItem != null)
             {
