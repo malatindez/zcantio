@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Item : Interactable
 {
-    // Start is called before the first frame update
     void Start()
     {
         var outline = gameObject.AddComponent<Outline>();
@@ -14,8 +13,11 @@ public class Item : Interactable
         outline.OutlineWidth = 5f;
         outline.enabled = false;
     }
+    public override void Interact()
+    {
 
-    // Update is called once per frame
+    }
+
     void Update()
     {
         
