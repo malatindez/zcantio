@@ -44,12 +44,10 @@ public class Camera : MonoBehaviour
         if (clickCounter >= 2)
         {
             _character.MovingSpeed = _character.FastRunning;
-            _character.AnimationFasterRun();
         }
         else
         {
             _character.MovingSpeed = _character.Running;
-            _character.AnimationRun();
         }
         _character.TargetPosition = hit.point;
     }

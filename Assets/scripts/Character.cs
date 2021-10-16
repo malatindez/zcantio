@@ -2,35 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum MovingMode  
-{ 
-}
 
 public class Character : MonoBehaviour
 {
-    public float Running = 7.5f;
-    public float FastRunning = 20;
-    public float ReachDistance = 0.1f;
+    public float Running;
+    public float FastRunning;
+    public float ReachDistance;
     public float MovingSpeed;
-    public Vector2 TargetPosition { get; set; }
-    
-    public bool isRightSide = true;
+    public bool isRightSide;
     public Animator animator;
+    public float Delay;
 
-    public void AnimationIdle()
+    public Vector2 TargetPosition { get; set; }
+
+    public bool Idling { get; private set; } = true;
+
+    private bool idlingBuffer = true;
+    public void UpdateAnimation()
     {
-        animator.SetInteger("MovingState", 0);
-    }
-
-
-    public void AnimationRun()
-    {
-        animator.SetInteger("MovingState", 1);
-    }
-
-    public void AnimationFasterRun()
-    {
-        animator.SetInteger("MovingState", 2);
+        if (Idling != idlingBuffer)
+        {
+            animator.SetInteger("MovingState", System.Convert.ToInt32(!Idling));
+            idlingBuffer = Idling;
+        }
     }
 
     void Start()
@@ -40,30 +34,30 @@ public class Character : MonoBehaviour
         TargetPosition = transform.position;
     }
 
-    public float Delay = 0.1f;
-    float stopwatch = 0f;
-
+    private float _stopwatch = 0;
     void Update()
     {
-        float distance = TargetPosition.x - transform.position.x;
-        if (Mathf.Abs(distance) > ReachDistance)
+        if(_stopwatch > Time.realtimeSinceStartup)
         {
-            if (stopwatch < Delay)
+            if (Time.realtimeSinceStartup - _stopwatch > -Delay)
             {
-                stopwatch += Time.deltaTime;
+                Idling = true;
             }
-            else
-            {
-                isRightSide = distance > 0 ? true : false;
-                gameObject.transform.localScale = new Vector3(isRightSide ? 1 : -1, 1, 1);
-                int wayToGo = transform.position.x > TargetPosition.x ? -1 : 1;
-                transform.Translate(new Vector3(wayToGo, 0, 0) * MovingSpeed * Time.deltaTime);
-            }
+            return;
+        }
+        float distance = TargetPosition.x - transform.position.x;
+        if (Mathf.Abs(distance) > 0.1f)
+        {
+            isRightSide = distance > 0;
+            gameObject.transform.localScale = new Vector3(isRightSide ? 1 : -1, 1, 1);
+            int wayToGo = transform.position.x > TargetPosition.x ? -1 : 1;
+            transform.Translate(new Vector3(wayToGo, 0, 0) * MovingSpeed * Time.deltaTime);
+            Idling = false;
         }
         else
         {
-            AnimationIdle();
-            stopwatch = 0f;
+            _stopwatch = Time.realtimeSinceStartup + Delay * 2;
         }
+        UpdateAnimation();
     }
 }
