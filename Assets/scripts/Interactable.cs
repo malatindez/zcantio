@@ -2,38 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Interactable : MonoBehaviour
+public class Interactable : SpriteOutline
 {
-    Outline Outline;
-    [SerializeField] protected float ReachDistance;
-    [SerializeField] protected Vector2 Coordinates;
-
+    [SerializeField] protected float ReachDistance = 0.1f;
     public float GetReachDistance()
     {
         return ReachDistance;
-    }
-    public Vector2 GetCoordinates()
-    {
-        return Coordinates;
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        Outline = gameObject.AddComponent<Outline>();
-
-        Outline.OutlineMode = Outline.Mode.OutlineAll;
-        Outline.OutlineColor = Color.yellow;
-        Outline.OutlineWidth = 5f;
-        Outline.enabled = false;
+        if (ReachDistance <= 0)
+        {
+            throw new System.ArgumentException("ReachDistance cannot be less or equal to zero!");
+        }
+        base.Start();
     }
+
+
     public virtual void Interact()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
     {
         
     }
