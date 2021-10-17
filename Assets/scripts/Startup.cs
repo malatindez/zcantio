@@ -5,30 +5,27 @@ using UnityEngine.Rendering.PostProcessing;
 
 public class Startup : MonoBehaviour
 {
-    public float DelayStartup = 10f;
+    [SerializeField] public float DelayStartup = 10f;
     public GameObject Camera;
     public GameObject Character;
-
-    float stopwatch;
-    bool isStarted = false;
+    
+    public bool isStarted { get; private set; }
 
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (stopwatch > DelayStartup && !isStarted)
+        if (Time.realtimeSinceStartup > DelayStartup && !isStarted)
         {
-            print("Test");
             isStarted = true;
             Camera.GetComponent<Camera>().orthographicSize = 5;
             Camera.GetComponent<CameraView>()._target = Character.transform;
             Camera.GetComponent<PostProcessVolume>().enabled = true;
+            this.enabled = false;
         }
-        else
-            stopwatch += Time.deltaTime;
     }
 }
