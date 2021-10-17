@@ -66,4 +66,12 @@ public class CameraView : MonoBehaviour
         _shakePower = shakePower;
         _shakeTimeoutTimestamp = Time.time + duration;
     }
+#if DEBUG
+    [ContextMenu("Shake For 5sec")]
+    private void TestShake()
+    {
+        if (Application.isPlaying)
+            ShakeCamera(5);
+    }
+#endif
 }
