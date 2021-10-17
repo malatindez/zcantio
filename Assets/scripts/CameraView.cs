@@ -12,6 +12,7 @@ public class CameraView : MonoBehaviour
 
     private Vector3 _originalPos;
     private float _shakeTimeoutTimestamp;
+    private float _smoothTimeoutTimestamp;
 
     private void Start()
     {
@@ -28,13 +29,19 @@ public class CameraView : MonoBehaviour
         if (_target)
         {
             Vector3 point = _camera.WorldToViewportPoint(_target.position);
-            Vector3 delta = _target.position - _camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, point.z)); //(new Vector3(0.5, 0.5, point.z));
+            Vector3 delta = _target.position - _camera.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, point.z));
             Vector3 destination = _originalPos + delta;
             _originalPos = Vector3.SmoothDamp(_originalPos, destination, ref velocity, _delay);
 
             if (Time.time <= _shakeTimeoutTimestamp)
             {
                 Vector3 shakeDestination = _originalPos + Random.insideUnitSphere * _shakePower;
+                shakeDestination.z = _originalPos.z;
+
+                transform.position = shakeDestination;
+            } else if (Time.time <= _smoothTimeoutTimestamp)
+            {
+                Vector3 shakeDestination = _originalPos + new Vector3(0,Mathf.Sin(Time.realtimeSinceStartup*4)) / 32;
                 shakeDestination.z = _originalPos.z;
 
                 transform.position = shakeDestination;
@@ -61,10 +68,15 @@ public class CameraView : MonoBehaviour
     /// </summary>
     /// <param name="duration">Duration in seconds.</param>
     /// <param name="shakeAmount">Shaked power.</param>
-    public void ShakeCamera(float duration, float shakePower)
+    public void ShakeCameraRoughly(float duration, float shakePower)
     {
         _shakePower = shakePower;
         _shakeTimeoutTimestamp = Time.time + duration;
+    }
+
+    public void ShakeCameraSmoothly(float duration)
+    {
+        _smoothTimeoutTimestamp = Time.time + duration;
     }
 #if DEBUG
     [ContextMenu("Shake For 5sec")]
