@@ -5,16 +5,23 @@ using UnityEngine;
 public class CameraBehaviour : MonoBehaviour
 {
     [SerializeField] private Character _character;
+    [SerializeField] public CameraView View;
 
 
     int clickCounter = 0;
     float lastClickTime = 0;
 
+    bool highlighted = false;
+
     public Interactable SelectedItem { get; private set; } = null;
     public Interactable HoveredItem { get; private set; } = null;
 
+    private Startup CameraStartup;
+
     void Start()
     {
+        View = GetComponent<CameraView>();
+        CameraStartup = GetComponent<Startup>();
         if (_character == null)
         {
             throw new System.ArgumentException("SerializeField _character cannot be null!");
@@ -43,23 +50,49 @@ public class CameraBehaviour : MonoBehaviour
         }
         SetSelectedItem(item);
 
-        if (hit.collider == null)
+        if (hit.collider != null)
         {
-            return;
+            _character.CurrentMovingSpeed = clickCounter >= 2
+                                                ? _character.FastRunning
+                                                : _character.Running;
+            _character.TargetPosition = hit.point;
         }
 
-        _character.CurrentMovingSpeed = clickCounter >= 2
-                                            ? _character.FastRunning
-                                            : _character.Running;
-        _character.TargetPosition = hit.point;
     }
 
 
-
-
-
-    void Update()
+    void HighlightWeapons()
     {
+        foreach (Weapon weapon in _character.WeaponList)
+        {
+            weapon.Highlight = true;
+        }
+    }
+    void RemoveHighlighting()
+    {
+        foreach (Weapon weapon in _character.WeaponList)
+        {
+            weapon.Highlight = false;
+        }
+    }
+
+    void LateUpdate()
+    {
+        if(!CameraStartup.isStarted)
+        {
+            if (!highlighted)
+            {
+                HighlightWeapons();
+                highlighted = true;
+            }
+            return;
+        }
+        if(highlighted)
+        {
+            RemoveHighlighting();
+            highlighted = true;
+        }
+
         if (HoveredItem != null)
         {
             HoveredItem.Hovered = false;
