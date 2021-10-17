@@ -23,6 +23,10 @@ public class Interactable : SpriteOutline
 
     public virtual void Interact()
     {
-        
+
+    }
+    void Update()
+    {
+        base.Update();
     }
 }

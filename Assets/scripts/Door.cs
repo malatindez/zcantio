@@ -10,13 +10,14 @@ public class Door : Interactable
 
     void Start()
     {
+        base.Start();
         animator = gameObject.GetComponent<Animator>();
     }
 
     [ContextMenu("Interact")]
     public override void Interact()
     {
-        if (CharacterObject.transform.position.x > gameObject.transform.position.x)
+        if (CharacterObject.transform.position.x >= gameObject.transform.position.x)
         {
             gameObject.transform.localScale = new Vector3(-1, 1, 1);
         }
@@ -24,8 +25,4 @@ public class Door : Interactable
     }
 
 
-    void Update()
-    {
-
-    }
 }
