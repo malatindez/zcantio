@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3201647309461615924}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.37, y: 1.53, z: 1}
+  m_LocalPosition: {x: 12.37, y: 1.53, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -118,10 +118,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SelectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   HoveredColor: {r: 1, g: 0, b: 0, a: 1}
+  HighlighColor: {r: 1, g: 0, b: 0, a: 1}
   OutlineWidth: 0.5
   ReachDistance: 0.1
-  view: {fileID: 0}
-  CharacterObject: {fileID: 0}
+  Floor: {fileID: 0}
 --- !u!65 &817536231059164658
 BoxCollider:
   m_ObjectHideFlags: 0
