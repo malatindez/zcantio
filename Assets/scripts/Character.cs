@@ -10,6 +10,7 @@ public class Character : MonoBehaviour
     [SerializeField] public float DefaultReachDistance;
     [SerializeField] public bool isRightSide;
     [SerializeField] public CameraBehaviour Camera;
+    [SerializeField] public GameObject QuestionMark;
     [SerializeField] public float Delay;
 
     public Animator animator { get; private set; }
@@ -26,14 +27,15 @@ public class Character : MonoBehaviour
 
     void Start()
     {
-        interactionState = new Interactable.Interaction();
-        animator = gameObject.GetComponent<Animator>();
-        CurrentMovingSpeed = Running;
-        TargetPosition = transform.position;
         if (Camera == null)
         {
             throw new System.ArgumentException("SerializeField Camera is not set!");
         }
+        QuestionMark.SetActive(false);
+        interactionState = new Interactable.Interaction();
+        animator = gameObject.GetComponent<Animator>();
+        CurrentMovingSpeed = Running;
+        TargetPosition = transform.position;
     }
 
     public void ChangeFloor(Floor floor, Vector2 offset, bool setPosition)
@@ -87,9 +89,19 @@ public class Character : MonoBehaviour
     private Interactable.Interaction interactionState;
     private bool interacted;
     private float _stopwatch = 0;
+
+    private float idlingStart = 0;
+
+    // TODO:
+    // refactor this hell
     void Update()
     {
         UpdateParent();
+
+        if(idlingStart + 8 < Time.realtimeSinceStartup)
+        {
+            QuestionMark.SetActive(true);
+        }
 
         // swap target position with the staircases' one if the target position is outside current floor
         // CurrentFloor.StaircaseUp if          the target position is above our floor
@@ -148,9 +160,14 @@ public class Character : MonoBehaviour
             interactionState.RightSide = isRightSide = distance > 0;
 
             gameObject.transform.localScale = new Vector3(isRightSide ? 1 : -1, 1, 1);
+            // neglect the changes above
+            QuestionMark.transform.localScale = new Vector3(isRightSide ? 1 : -1, 1, 1);
+
             int wayToGo = transform.position.x > TargetPosition.x ? -1 : 1;
             transform.Translate(new Vector3(wayToGo, 0, 0) * CurrentMovingSpeed * Time.deltaTime);
             Idling = false;
+            idlingStart = Time.realtimeSinceStartup;
+            QuestionMark.SetActive(false);
         }
         else
         {
