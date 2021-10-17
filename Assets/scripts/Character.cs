@@ -148,7 +148,7 @@ public class Character : MonoBehaviour
     }
 
     // TODO:
-    // refactor this hell
+    // refactor this mess
     void Update()
     {
 

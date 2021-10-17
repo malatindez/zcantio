@@ -12,7 +12,6 @@ public class Startup : MonoBehaviour
     [SerializeField] public TextGenerator TimerText;
     [SerializeField] public TextGenerator Win;
     [SerializeField] public TextGenerator Loss;
-    [SerializeField] public TextGenerator RemainingTime;
     [SerializeField] public TextGenerator GunsLeft;
     [SerializeField] public TextGenerator Objective;
 
@@ -24,7 +23,6 @@ public class Startup : MonoBehaviour
         Win.gameObject.SetActive(false);
         Loss.gameObject.SetActive(false);
         TimerText.gameObject.SetActive(false);
-        RemainingTime.gameObject.SetActive(false);
         GunsLeft.gameObject.SetActive(false);
         Objective.gameObject.SetActive(true);
     }
