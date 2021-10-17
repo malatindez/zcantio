@@ -19,11 +19,11 @@ public class Door : Interactable
     {
         if (i.RightSide)
         {
-            gameObject.transform.rotation = new Quaternion(0,180,0,0);
+            gameObject.transform.rotation = new Quaternion(0, 0,0,0);
         }
         else
         {
-            gameObject.transform.rotation = new Quaternion(0, 0, 0, 0);
+            gameObject.transform.rotation = new Quaternion(0, 180, 0, 0);
         }
         animator.SetBool("isOpened", true);
         view.ShakeCamera(0.1f,1);
