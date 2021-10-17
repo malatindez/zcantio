@@ -65,6 +65,7 @@ public class CameraBehaviour : MonoBehaviour
     {
         foreach (Weapon weapon in _character.WeaponList)
         {
+            weapon.transform.localScale *= 1.5f;
             weapon.Highlight = true;
         }
     }
@@ -73,7 +74,9 @@ public class CameraBehaviour : MonoBehaviour
         foreach (Weapon weapon in _character.WeaponList)
         {
             weapon.Highlight = false;
+            weapon.transform.localScale *= 1f/1.5f;
         }
+
     }
 
     void LateUpdate()
@@ -90,7 +93,7 @@ public class CameraBehaviour : MonoBehaviour
         if(highlighted)
         {
             RemoveHighlighting();
-            highlighted = true;
+            highlighted = false;
         }
 
         if (HoveredItem != null)

@@ -32,6 +32,7 @@ public class Character : MonoBehaviour
     void Start()
     {
         WeaponList = new List<Weapon>();
+        
         foreach (Transform transform in gameObject.transform.parent.parent.transform)
         {
             if (transform.gameObject.TryGetComponent<Floor>(out Floor floor))
@@ -132,12 +133,25 @@ public class Character : MonoBehaviour
         }
     }
 
+    public int GunsLeft()
+    {
+        int j = 0;
+        foreach (Weapon weapon in WeaponList)
+        {
+            if(!weapon.destroyed)
+            {
+                j += 1;
+            }
+        }
 
+        return j;
+    }
 
     // TODO:
     // refactor this hell
     void Update()
     {
+
         UpdateParent();
 
         if (idlingStart + 4 < Time.realtimeSinceStartup)
@@ -220,7 +234,6 @@ public class Character : MonoBehaviour
         float reachDistance = Camera.SelectedItem == null ? DefaultReachDistance : Camera.SelectedItem.GetReachDistance();
         if (Mathf.Abs(distance) > reachDistance && obstacle == null)
         {
-
             interacted = false;
             interactionState.RightSide = isRightSide = distance > 0;
 

@@ -43,7 +43,7 @@ public class SpriteOutline : MonoBehaviour
         else if (Highlight)
         {
             _material.SetColor(OutlineColorBase, HighlighColor);
-            _material.SetFloat("_Thickness", 3.0f);
+            _material.SetFloat("_Thickness", 0.75f);
         }
         else
         {

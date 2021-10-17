@@ -7,9 +7,12 @@ public class Weapon : Item
     public Sprite Part1;
     public Sprite Part2;
     public Vector2 Velocity = new Vector2(10f, 10f);
+    public bool destroyed { get; private set; } = false;
 
     public override void Interact(Interaction i)
     {
+        Camera.main.GetComponent<CameraView>().ShakeCameraRoughly(0.1f, 1);
+        destroyed = true;
         GameObject part1 = new GameObject("Garbage");
         part1.transform.position = gameObject.transform.position;
         SpriteRenderer spriteRendrer1 = part1.AddComponent<SpriteRenderer>();

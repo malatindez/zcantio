@@ -161,7 +161,7 @@ public class TextGenerator : MonoBehaviour
     }
 
     [ContextMenu("Initialize")]
-    void Initialize()
+    public void Initialize()
     {
         Sprite[] res = Resources.LoadAll<Sprite>(font.name);
         chars = new Texture2D[res.Length];
