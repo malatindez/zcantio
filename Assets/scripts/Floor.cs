@@ -17,20 +17,19 @@ public class Floor : MonoBehaviour
         transform.hasChanged = true;
     }
 
-    public bool checkForObstacles(float position, float target, Transform skip = null)
+    public Transform GetObstacle(float position, float target)
     {
         float temp = target - position;
         foreach(Transform foregroundObject in foregroundObjects)
         {
             bool flagA = foregroundObject.position.x - position > 0;
             bool flagB = foregroundObject.position.x - position < temp;
-            if ((skip == null || skip != foregroundObject) &&
-                ((temp > 0 && flagA && flagB) ||
+            if (((temp > 0 && flagA && flagB) ||
                 (temp <= 0 && !flagA && !flagB ))
                 )
-                   return true;
+                   return foregroundObject;
         }
-        return false;
+        return null;
     }
     private void Update()
     {
