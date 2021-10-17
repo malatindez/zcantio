@@ -44,17 +44,19 @@ public class Character : MonoBehaviour
     private float _stopwatch = 0;
     void Update()
     {
-        if(_stopwatch > Time.realtimeSinceStartup)
+        float distance = TargetPosition.x - transform.position.x;
+        if (_stopwatch > Time.realtimeSinceStartup)
         {
             if (Time.realtimeSinceStartup - _stopwatch > -Delay)
             {
-                if (Camera.SelectedItem != null)
+                if (Camera.SelectedItem != null && Mathf.Abs(distance) <= Camera.SelectedItem.GetReachDistance())
+                {
                     Camera.SelectedItem.Interact();
+                }
                 Idling = true;
             }
             return;
         }
-        float distance = TargetPosition.x - transform.position.x;
         float reachDistance = Camera.SelectedItem == null ? DefaultReachDistance : Camera.SelectedItem.GetReachDistance();
         if (Mathf.Abs(distance) > reachDistance)
         {
