@@ -6,6 +6,8 @@ public class CameraView : MonoBehaviour
     [SerializeField] private float _delay = 0.15f;
     public Transform _target;
     [SerializeField] private float _shakePower = 0.16f;
+    [SerializeField] private float _verticalShakePower = 0.16f;
+    [SerializeField] private float _verticalShakeSpeed = 8f;
 
     private Vector3 velocity = Vector3.zero;
     private UnityEngine.Camera _camera;
@@ -41,7 +43,7 @@ public class CameraView : MonoBehaviour
                 transform.position = shakeDestination;
             } else if (Time.time <= _smoothTimeoutTimestamp)
             {
-                Vector3 shakeDestination = _originalPos + new Vector3(0,Mathf.Sin(Time.realtimeSinceStartup*4)) / 32;
+                Vector3 shakeDestination = _originalPos + new Vector3(0,Mathf.Sin(Time.realtimeSinceStartup*_verticalShakeSpeed)) * _verticalShakePower;
                 shakeDestination.z = _originalPos.z;
 
                 transform.position = shakeDestination;
