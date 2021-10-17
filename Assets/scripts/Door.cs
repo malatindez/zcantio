@@ -26,9 +26,10 @@ public class Door : Interactable
             gameObject.transform.rotation = new Quaternion(0, 180, 0, 0);
         }
         animator.SetBool("isOpened", true);
-        view.ShakeCamera(0.1f,1);
+        view.ShakeCameraRoughly(0.1f,1);
         gameObject.transform.parent = Floor.transform.Find("Background").transform;
         Floor.transform.hasChanged = true;
+        ReachDistance = 1.5f;
     }
 
 
