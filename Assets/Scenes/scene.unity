@@ -418,6 +418,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SelectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   HoveredColor: {r: 1, g: 0, b: 0, a: 1}
+  HighlighColor: {r: 1, g: 0, b: 0, a: 1}
   OutlineWidth: 0.5
   ReachDistance: 1.5
   Floor: {fileID: 0}
@@ -746,6 +747,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SelectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   HoveredColor: {r: 1, g: 0, b: 0, a: 1}
+  HighlighColor: {r: 1, g: 0, b: 0, a: 1}
   OutlineWidth: 0.5
   ReachDistance: 1.5
   Floor: {fileID: 0}
@@ -1787,6 +1789,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4918317683043296851, guid: f3066b6a1949e5045aa9a4099f7b0f50, type: 3}
+      propertyPath: ReachDistance
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f3066b6a1949e5045aa9a4099f7b0f50, type: 3}
 --- !u!1 &835433200
@@ -1890,6 +1896,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _character: {fileID: 47316986}
+  View: {fileID: 0}
 --- !u!114 &835433205
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1905,6 +1912,8 @@ MonoBehaviour:
   _delay: 0.15
   _target: {fileID: 0}
   _shakePower: 0.16
+  _verticalShakePower: 0.04
+  _verticalShakeSpeed: 10
 --- !u!114 &835433206
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1997,7 +2006,6 @@ MonoBehaviour:
   DelayStartup: 5
   Camera: {fileID: 835433200}
   Character: {fileID: 47316982}
-  TimerUI: {fileID: 664608218}
 --- !u!1 &858126386
 GameObject:
   m_ObjectHideFlags: 0
@@ -3040,6 +3048,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SelectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   HoveredColor: {r: 1, g: 0, b: 0, a: 1}
+  HighlighColor: {r: 1, g: 0, b: 0, a: 1}
   OutlineWidth: 0.5
   ReachDistance: 1.5
   Floor: {fileID: 0}
@@ -3188,6 +3197,10 @@ PrefabInstance:
       propertyPath: view
       value: 
       objectReference: {fileID: 835433205}
+    - target: {fileID: 4918317683043296851, guid: f3066b6a1949e5045aa9a4099f7b0f50, type: 3}
+      propertyPath: ReachDistance
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f3066b6a1949e5045aa9a4099f7b0f50, type: 3}
 --- !u!1 &1460060943
@@ -3270,6 +3283,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SelectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   HoveredColor: {r: 1, g: 0, b: 0, a: 1}
+  HighlighColor: {r: 1, g: 0, b: 0, a: 1}
   OutlineWidth: 0.5
   ReachDistance: 1.5
   Floor: {fileID: 0}
@@ -3406,6 +3420,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SelectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   HoveredColor: {r: 1, g: 0, b: 0, a: 1}
+  HighlighColor: {r: 1, g: 0, b: 0, a: 1}
   OutlineWidth: 0.5
   ReachDistance: 1.5
   Floor: {fileID: 0}
@@ -3697,6 +3712,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SelectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   HoveredColor: {r: 1, g: 0, b: 0, a: 1}
+  HighlighColor: {r: 1, g: 0, b: 0, a: 1}
   OutlineWidth: 0.5
   ReachDistance: 1.5
   Floor: {fileID: 0}
@@ -4407,8 +4423,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SelectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   HoveredColor: {r: 1, g: 0, b: 0, a: 1}
+  HighlighColor: {r: 1, g: 0, b: 0, a: 1}
   OutlineWidth: 0.5
-  ReachDistance: 0.1
+  ReachDistance: 0.5
   Floor: {fileID: 0}
 --- !u!212 &3201647308715883828
 SpriteRenderer:
@@ -4540,8 +4557,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SelectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   HoveredColor: {r: 1, g: 0, b: 0, a: 1}
+  HighlighColor: {r: 1, g: 0, b: 0, a: 1}
   OutlineWidth: 0.5
-  ReachDistance: 0.1
+  ReachDistance: 0.5
   Floor: {fileID: 0}
 --- !u!4 &3201647308715883851
 Transform:
@@ -4585,8 +4603,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SelectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   HoveredColor: {r: 1, g: 0, b: 0, a: 1}
+  HighlighColor: {r: 1, g: 0, b: 0, a: 1}
   OutlineWidth: 0.5
-  ReachDistance: 0.1
+  ReachDistance: 0.5
   Floor: {fileID: 0}
 --- !u!1 &3201647309076298189
 GameObject:
@@ -4763,5 +4782,9 @@ PrefabInstance:
       propertyPath: view
       value: 
       objectReference: {fileID: 835433205}
+    - target: {fileID: 4918317683043296851, guid: f3066b6a1949e5045aa9a4099f7b0f50, type: 3}
+      propertyPath: ReachDistance
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f3066b6a1949e5045aa9a4099f7b0f50, type: 3}
