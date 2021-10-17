@@ -4,17 +4,13 @@ using UnityEngine;
 
 public class Item : Interactable
 {
-    void Start()
+    new void Start()
+    {
+        base.Start();
+    }
+    public override void Interact(Interaction i)
     {
 
     }
-    public override void Interact()
-    {
 
-    }
-
-    void Update()
-    {
-        
-    }
 }
