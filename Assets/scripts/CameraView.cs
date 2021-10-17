@@ -4,7 +4,7 @@ using UnityEngine;
 public class CameraView : MonoBehaviour
 {
     [SerializeField] private float _delay = 0.15f;
-    [SerializeField] private Transform _target;
+    public Transform _target;
     [SerializeField] private float _shakePower = 0.16f;
 
     private Vector3 velocity = Vector3.zero;

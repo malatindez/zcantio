@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Door : Interactable
 {
-    [SerializeField] CameraView view;
+    CameraView view;
 
 
     Animator animator;
@@ -12,6 +12,7 @@ public class Door : Interactable
     void Start()
     {
         base.Start();
+        view = Camera.main.GetComponent<CameraView>();
         animator = gameObject.GetComponent<Animator>();
     }
 
