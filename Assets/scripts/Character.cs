@@ -5,25 +5,30 @@ using System.Linq;
 
 public class Character : MonoBehaviour
 {
-    [SerializeField] public float Running;
-    [SerializeField] public float FastRunning;
-    [SerializeField] public float DefaultReachDistance;
-    [SerializeField] public bool isRightSide;
-    [SerializeField] public CameraBehaviour Camera;
+    [SerializeField] public float Running = 5;
+    [SerializeField] public float FastRunning = 10;
+    [SerializeField] public float MaxStamina = 60;
+    [SerializeField] public float MinStaminaToRun = 15;
+    [SerializeField] public float DefaultReachDistance = 0.1f;
+    [SerializeField] public float Delay = 0.025f;
     [SerializeField] public GameObject QuestionMark;
-    [SerializeField] public float Delay;
+    [SerializeField] public CameraBehaviour Camera;
+    [SerializeField] CameraView view;
 
     public Animator animator { get; private set; }
-
     public float CurrentMovingSpeed { get; set; }
     public Vector2 TargetPosition { get; set; }
     public bool Idling { get; private set; } = true;
+    public float Stamina { get; private set; } = 60;
 
+    private bool isRightSide;
     private bool idlingBuffer = true;
 
     private Floor currentFloor;
     private Stack<Vector2> TargetPositionsStack { get; set; } = new Stack<Vector2>();
     private Stack<Interactable> ItemsStack { get; set; } = new Stack<Interactable>();
+
+
 
     void Start()
     {
@@ -53,27 +58,6 @@ public class Character : MonoBehaviour
         currentFloor.gameObject.transform.hasChanged = true;
     }
 
-    public void UpdateAnimation()
-    {
-        if (Idling != idlingBuffer)
-        {
-            animator.SetInteger("MovingState", System.Convert.ToInt32(!Idling));
-            idlingBuffer = Idling;
-        }
-    }
-
-    void UpdateParent()
-    {
-        if (transform.hasChanged || currentFloor == null)
-        {
-            currentFloor = transform.parent.GetComponent<Floor>();
-            if(currentFloor == null)
-            {
-                throw new System.ArgumentException("The player should be a child of Floor object!");
-            }
-            transform.hasChanged = false;
-        }
-    }
 
 
     private Interactable.Interaction interactionState = new Interactable.Interaction();
@@ -94,6 +78,39 @@ public class Character : MonoBehaviour
         ItemsStack.Push(Camera.SelectedItem);
     }
 
+    public void UpdateAnimation()
+    {
+        if (Idling != idlingBuffer)
+        {
+            animator.SetInteger("MovingState", System.Convert.ToInt32(!Idling));
+            idlingBuffer = Idling;
+        }
+    }
+
+
+    void UpdateParent()
+    {
+        if (transform.hasChanged || currentFloor == null)
+        {
+            currentFloor = transform.parent.GetComponent<Floor>();
+            if (currentFloor == null)
+            {
+                throw new System.ArgumentException("The player should be a child of Floor object!");
+            }
+            transform.hasChanged = false;
+        }
+    }
+    
+    void UpdateStamina(float addStamina = 0)
+    {
+        Stamina += Time.deltaTime + addStamina;
+        if (Stamina > MaxStamina)
+        {
+            Stamina = MaxStamina;
+        }
+    }
+
+
     // This function is called immediately after interaction with the current target
     // this function updates 
     private void TargetMet()
@@ -109,51 +126,12 @@ public class Character : MonoBehaviour
             }
         }
     }
-
-
-
-    // TODO:
-    // refactor this hell
-    void Update()
+    private void UpdateInteract(float distance)
     {
-        UpdateParent();
-
-        if(idlingStart + 8 < Time.realtimeSinceStartup)
-        {
-            QuestionMark.SetActive(true);
-        }
-
-        // swap target position with the staircases' one if the target position is outside current floor
-        // CurrentFloor.StaircaseUp if          the target position is above our floor
-        // CurrentFloor.StaircaseDown if below
-        if (currentFloor.StaircaseDown != null &&
-            currentFloor.PreviousFloor != null && 
-            currentFloor.transform.position.y > TargetPosition.y && // check if the target position is on the floor below
-            (Vector2)currentFloor.StaircaseDown.transform.position != TargetPosition &&
-            ((Camera.SelectedItem == null) || (currentFloor.PreviousFloor.StaircaseUp.transform != Camera.SelectedItem.transform)))
-        {
-            PushCurrentTarget();
-            TargetPosition = currentFloor.StaircaseDown.transform.position;
-            Camera.SetSelectedItem(currentFloor.StaircaseDown);
-        }
-        else if (currentFloor.StaircaseUp != null &&
-          currentFloor.NextFloor != null &&
-          currentFloor.NextFloor.transform.position.y <= TargetPosition.y && // check if the target position is on the floor above
-          (Vector2)currentFloor.StaircaseUp.transform.position != TargetPosition &&
-          ((Camera.SelectedItem == null) || (currentFloor.NextFloor.StaircaseDown.transform != Camera.SelectedItem.transform)))
-        {
-            PushCurrentTarget();
-            TargetPosition = currentFloor.StaircaseUp.transform.position;
-            Camera.SetSelectedItem(currentFloor.StaircaseUp);
-        }
-
-
-        float distance = TargetPosition.x - transform.position.x;
-
         // interaction and idling section.
         if (_stopwatch > Time.realtimeSinceStartup)
-        { 
-            if (Time.realtimeSinceStartup - _stopwatch > -Delay)
+        {
+            if (Time.realtimeSinceStartup - _stopwatch > -CurrentDelay)
             {
                 // if we haven't interacted, selectedObject is on this floor and is not null
                 // and the object is within reach distance — we interact with it
@@ -173,14 +151,41 @@ public class Character : MonoBehaviour
                         TargetMet();
                     }
                 }
-                
+
                 Idling = true;
             }
             return;
         }
+    }
 
-
-        float reachDistance = Camera.SelectedItem == null ? DefaultReachDistance : Camera.SelectedItem.GetReachDistance();
+    private void UpdateTargets()
+    {
+        // swap target position with the staircases' one if the target position is outside current floor
+        // CurrentFloor.StaircaseUp if          the target position is above our floor
+        // CurrentFloor.StaircaseDown if below
+        if (currentFloor.StaircaseDown != null &&
+            currentFloor.PreviousFloor != null &&
+            currentFloor.transform.position.y > TargetPosition.y && // check if the target position is on the floor below
+            (Vector2)currentFloor.StaircaseDown.transform.position != TargetPosition &&
+            ((Camera.SelectedItem == null) || (currentFloor.PreviousFloor.StaircaseUp.transform != Camera.SelectedItem.transform)))
+        {
+            PushCurrentTarget();
+            TargetPosition = currentFloor.StaircaseDown.transform.position;
+            Camera.SetSelectedItem(currentFloor.StaircaseDown);
+        }
+        else if (currentFloor.StaircaseUp != null &&
+          currentFloor.NextFloor != null &&
+          currentFloor.NextFloor.transform.position.y <= TargetPosition.y && // check if the target position is on the floor above
+          (Vector2)currentFloor.StaircaseUp.transform.position != TargetPosition &&
+          ((Camera.SelectedItem == null) || (currentFloor.NextFloor.StaircaseDown.transform != Camera.SelectedItem.transform)))
+        {
+            PushCurrentTarget();
+            TargetPosition = currentFloor.StaircaseUp.transform.position;
+            Camera.SetSelectedItem(currentFloor.StaircaseUp);
+        }
+    }
+    private Transform GetObstacle()
+    {
         Transform obstacle = currentFloor.GetObstacle(transform.position.x, TargetPosition.x);
         if (obstacle != null && Camera.SelectedItem != null && obstacle == Camera.SelectedItem.transform)
         {
@@ -193,9 +198,39 @@ public class Character : MonoBehaviour
             TargetPosition = obstacle.transform.position;
             Camera.SetSelectedItem(door);
         }
+        return obstacle;
+    }
+
+    private float CurrentDelay = 0.1f;
+
+    // TODO:
+    // refactor this mess
+    void Update()
+    {
+        UpdateAnimation();
+        UpdateParent();
+        UpdateStamina(Mathf.Log((float)System.Math.E + Time.realtimeSinceStartup - idlingStart));
+
+        if (idlingStart + 4 < Time.realtimeSinceStartup)
+        {
+            QuestionMark.SetActive(true);
+        }
+
+        float distance = TargetPosition.x - transform.position.x;
+
+        UpdateInteract(distance);
+        UpdateTargets();
+
+        Transform obstacle = GetObstacle();
+
+
+        float reachDistance = Camera.SelectedItem == null ? DefaultReachDistance : Camera.SelectedItem.GetReachDistance();
         if (Mathf.Abs(distance) > reachDistance && obstacle == null)
         {
-
+            if (CurrentMovingSpeed == FastRunning && Stamina <= MinStaminaToRun)
+            {
+                CurrentMovingSpeed = Running;
+            }
             interacted = false;
             interactionState.RightSide = isRightSide = distance > 0;
 
@@ -208,12 +243,24 @@ public class Character : MonoBehaviour
             Idling = false;
             idlingStart = Time.realtimeSinceStartup;
             QuestionMark.SetActive(false);
+            Stamina -= Time.deltaTime * 2;
+            if (CurrentMovingSpeed == FastRunning)
+            {
+                Stamina -= Time.deltaTime * 3;
+            }
+            
+            if (Stamina < 0)
+            {
+                _stopwatch = Time.realtimeSinceStartup + MinStaminaToRun;
+                CurrentDelay = MinStaminaToRun - Delay;
+            }
+            view.ShakeCameraSmoothly(Time.deltaTime * 2);
         }
         else
         {
             _stopwatch = Time.realtimeSinceStartup + Delay * 2;
+            CurrentDelay = Delay;
         }
 
-        UpdateAnimation();
     }
 }
