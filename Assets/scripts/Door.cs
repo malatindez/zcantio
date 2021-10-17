@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Door : Interactable
 {
-    public GameObject CharacterObject;
+    [SerializeField] CameraView view;
+
 
     Animator animator;
 
@@ -14,14 +15,20 @@ public class Door : Interactable
         animator = gameObject.GetComponent<Animator>();
     }
 
-    [ContextMenu("Interact")]
-    public override void Interact()
+    public override void Interact(Interaction i)
     {
-        if (CharacterObject.transform.position.x >= gameObject.transform.position.x)
+        if (i.RightSide)
         {
-            gameObject.transform.localScale = new Vector3(-1, 1, 1);
+            gameObject.transform.rotation = new Quaternion(0,180,0,0);
+        }
+        else
+        {
+            gameObject.transform.rotation = new Quaternion(0, 0, 0, 0);
         }
         animator.SetBool("isOpened", true);
+        view.ShakeCamera(0.1f,1);
+        gameObject.transform.parent = Floor.transform.Find("Background").transform;
+        Floor.transform.hasChanged = true;
     }
 
 
