@@ -8,7 +8,7 @@ public class SpriteOutline : MonoBehaviour
 {
     private const string OutlineColorBase = "_SolidOutline";
     [SerializeField] UnityEngine.Color SelectedColor = Color.yellow;
-    [SerializeField] UnityEngine.Color HoveredColor = Color.red;
+    [SerializeField] UnityEngine.Color HoveredColor = Color.white;
 
     [SerializeField] protected float OutlineWidth = 0.5f;
     public bool Selected { get; set; } = false;
