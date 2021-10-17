@@ -35,7 +35,7 @@ public class CameraBehaviour : MonoBehaviour
         }
     }
 
-    void OnMultiClick(RaycastHit hit, Interactable item)
+    void OnMultiClick(RaycastHit2D hit, Interactable item)
     {
         if(clickCounter <= 0)
         {
@@ -66,16 +66,17 @@ public class CameraBehaviour : MonoBehaviour
             HoveredItem = null;
         }
 
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    
         Interactable item = null;
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit) && hit.collider.gameObject.TryGetComponent<Interactable>(out item))
+        RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+        if (hit.collider != null && hit.collider.gameObject.TryGetComponent<Interactable>(out item))
         {
             HoveredItem = item;
             HoveredItem.Hovered = true;
         }
         if (Input.GetMouseButton(0))
         {
+            _character.ClearStack();
             var currentTime = Time.realtimeSinceStartup;
             if (Input.GetMouseButtonDown(0))
             {
