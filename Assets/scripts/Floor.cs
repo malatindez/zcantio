@@ -4,7 +4,13 @@ using UnityEngine;
 
 public class Floor : MonoBehaviour
 {
+    [SerializeField] public Floor PreviousFloor = null;
+    [SerializeField] public Floor NextFloor = null;
+    [SerializeField] public Staircase StaircaseUp = null;
+    [SerializeField] public Staircase StaircaseDown = null;
+
     private List<Transform> foregroundObjects;
+    
     void Start()
     {
         foregroundObjects = new List<Transform>();

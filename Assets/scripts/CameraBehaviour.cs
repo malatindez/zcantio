@@ -21,14 +21,8 @@ public class CameraBehaviour : MonoBehaviour
         }
     }
 
-
-    void OnMultiClick(RaycastHit hit, Interactable item)
+    public void SetSelectedItem(Interactable item)
     {
-        if(clickCounter <= 0)
-        {
-            return;
-        }
-
         if (SelectedItem != null)
         {
             SelectedItem.Selected = false;
@@ -39,6 +33,16 @@ public class CameraBehaviour : MonoBehaviour
             SelectedItem = item;
             SelectedItem.Selected = true;
         }
+    }
+
+    void OnMultiClick(RaycastHit hit, Interactable item)
+    {
+        if(clickCounter <= 0)
+        {
+            return;
+        }
+        SetSelectedItem(item);
+
         if (hit.collider == null)
         {
             return;

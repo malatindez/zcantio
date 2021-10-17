@@ -21,6 +21,8 @@ public class Character : MonoBehaviour
     private bool idlingBuffer = true;
 
     private Floor currentFloor;
+    private Vector2 bufferedTargetPosition { get; set; }
+    private Interactable bufferedItem { get; set; }
 
     void Start()
     {
@@ -44,6 +46,16 @@ public class Character : MonoBehaviour
         } else
         {
             gameObject.transform.position = new Vector3(offset.x, offset.y, gameObject.transform.position.z);
+        }
+        if(bufferedTargetPosition.x == 0 && bufferedTargetPosition.y == 0)
+        {
+            TargetPosition = gameObject.transform.position;
+        } else
+        {
+            TargetPosition = bufferedTargetPosition;
+            Camera.SetSelectedItem(bufferedItem);
+            bufferedItem = null;
+            bufferedTargetPosition = new Vector2(0, 0);
         }
         currentFloor = floor;
         currentFloor.gameObject.transform.hasChanged = true;
@@ -79,23 +91,50 @@ public class Character : MonoBehaviour
     {
         UpdateParent();
 
-        float distance = TargetPosition.x - transform.position.x;
-        if (_stopwatch > Time.realtimeSinceStartup)
+        // swap target position with the staircases' one if the target position is outside current floor
+        // CurrentFloor.StaircaseUp if          the target position is above our floor
+        // CurrentFloor.StaircaseDown if below
+        if (currentFloor.transform.position.y > TargetPosition.y && currentFloor.PreviousFloor != null)
         {
+            bufferedTargetPosition = TargetPosition;
+            bufferedItem = Camera.SelectedItem;
+            TargetPosition = currentFloor.StaircaseDown.transform.position;
+            Camera.SetSelectedItem(currentFloor.StaircaseDown);
+        }
+        else if (currentFloor.StaircaseUp != null &&
+          currentFloor.NextFloor != null &&
+          currentFloor.NextFloor.transform.position.y <= TargetPosition.y)
+        {
+            bufferedTargetPosition = TargetPosition;
+            bufferedItem = Camera.SelectedItem;
+            TargetPosition = currentFloor.StaircaseUp.transform.position;
+            Camera.SetSelectedItem(currentFloor.StaircaseUp);
+        }
+
+
+        float distance = TargetPosition.x - transform.position.x;
+
+        // interaction and idling section.
+        if (_stopwatch > Time.realtimeSinceStartup)
+        { 
             if (Time.realtimeSinceStartup - _stopwatch > -Delay)
             {
+                // if we haven't interacted, selectedObject is on this floor and is not null
+                // and the object is within reach distance — we interact with it
                 if (!interacted && 
                     Camera.SelectedItem != null && 
                     Camera.SelectedItem.Floor == currentFloor &&
                     Mathf.Abs(distance) <= Camera.SelectedItem.GetReachDistance())
                 {
                     Camera.SelectedItem.Interact(interactionState);
+                    _stopwatch = Time.realtimeSinceStartup - 1;
                     interacted = true;
                 }
                 Idling = true;
             }
             return;
         }
+
 
         float reachDistance = Camera.SelectedItem == null ? DefaultReachDistance : Camera.SelectedItem.GetReachDistance();
         if (Mathf.Abs(distance) > reachDistance && 
@@ -104,6 +143,7 @@ public class Character : MonoBehaviour
                 TargetPosition.x, 
                 Camera.SelectedItem == null ? null : Camera.SelectedItem.transform))
         {
+
             interacted = false;
             interactionState.RightSide = isRightSide = distance > 0;
 
