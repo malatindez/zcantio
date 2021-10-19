@@ -97,7 +97,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SelectedColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  HoveredColor: {r: 1, g: 0, b: 0, a: 1}
+  HoveredColor: {r: 1, g: 1, b: 1, a: 1}
   HighlighColor: {r: 1, g: 0, b: 0, a: 1}
   OutlineWidth: 0.5
   ReachDistance: 0.1
