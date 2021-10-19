@@ -25,6 +25,7 @@ public class Startup : MonoBehaviour
         TimerText.gameObject.SetActive(false);
         GunsLeft.gameObject.SetActive(false);
         Objective.gameObject.SetActive(true);
+    //    TimerText.
     }
 
     // Update is called once per frame
@@ -40,7 +41,7 @@ public class Startup : MonoBehaviour
             TimerText.gameObject.SetActive(true);
             GunsLeft.gameObject.SetActive(true);
             GunsLeft.text = "Guns left: " + System.Convert.ToString(Character.GunsLeft());
-            GunsLeft.Initialize();
+            GunsLeft.UpdateText();
             return;
         }
 
@@ -84,9 +85,9 @@ public class Startup : MonoBehaviour
                 TimerText.multiplier = 5 + Mathf.Sin(Time.realtimeSinceStartup) / 2;
                 TimerText.color = new UnityEngine.Color(0.6f + 0.4f * (15 - timeLeft) / 15, 0.06657172f, 0.06657172f);
             }
-            TimerText.Initialize();
+            TimerText.UpdateText();
             GunsLeft.text = System.Convert.ToString(Character.GunsLeft()) + " guns left";
-            GunsLeft.Initialize();
+            GunsLeft.UpdateText();
         }
     }
 }

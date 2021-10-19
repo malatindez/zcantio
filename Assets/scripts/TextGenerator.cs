@@ -10,7 +10,11 @@ public class TextGenerator : MonoBehaviour
 
     private Texture2D[] chars;
     private int[] widths;
-
+    private string _bufferedText = "Example";
+    private string _bufferedFont = "";
+    private Color _bufferedColor = Color.white;
+    // TODO
+    // completely rewrite this thing to raw image data
     public Texture2D GetTexture(string str)
     {
         int rows = 0;
@@ -160,13 +164,31 @@ public class TextGenerator : MonoBehaviour
         return resizedText;
     }
 
-    [ContextMenu("Initialize")]
-    public void Initialize()
+    public void UpdateText()
     {
+        if (_bufferedText == text && color == _bufferedColor)
+        {
+            return;
+        }
+        _bufferedText = text;
+        UpdateFont();
+        RawImage rimage = this.GetComponent<RawImage>();
+        rimage.texture = GetTexture(text);
+        rimage.rectTransform.sizeDelta = new Vector2(rimage.texture.width * multiplier, rimage.texture.height * multiplier);
+    }
+
+    private void UpdateFont()
+    {
+        if(_bufferedFont == font.name && color == _bufferedColor)
+        {
+            return;
+        }
+        _bufferedFont = font.name;
+        _bufferedColor = color;
+        
         Sprite[] res = Resources.LoadAll<Sprite>(font.name);
         chars = new Texture2D[res.Length];
         widths = new int[res.Length];
-
         for (int ind = 0; ind < res.Length; ind++)
         {
             Rect rect = res[ind].rect;
@@ -188,9 +210,12 @@ public class TextGenerator : MonoBehaviour
             widths[ind] = temp.width;
         }
 
-        RawImage rimage = this.GetComponent<RawImage>();
-        rimage.texture = GetTexture(text);
-        rimage.rectTransform.sizeDelta = new Vector2(rimage.texture.width * multiplier, rimage.texture.height * multiplier);
+    }
+    [ContextMenu("Initialize")]
+    private void Initialize()
+    {
+        UpdateFont();
+        UpdateText();
     }
     void Start() 
     {
