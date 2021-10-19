@@ -2,18 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
-
+using TMPro;
 public class Startup : MonoBehaviour
 {
     [SerializeField] public float DelayStartup = 20f;
     [SerializeField] public float Timer = 60f;
     [SerializeField] public GameObject Camera;
     [SerializeField] public Character Character;
-    [SerializeField] public TextGenerator TimerText;
-    [SerializeField] public TextGenerator Win;
-    [SerializeField] public TextGenerator Loss;
-    [SerializeField] public TextGenerator GunsLeft;
-    [SerializeField] public TextGenerator Objective;
+    [SerializeField] public TMP_Text TimerText;
+    [SerializeField] public TMP_Text Win;
+    [SerializeField] public TMP_Text Loss;
+    [SerializeField] public TMP_Text GunsLeft;
+    [SerializeField] public TMP_Text Objective;
 
 
     public bool isStarted { get; private set; }
@@ -40,8 +40,9 @@ public class Startup : MonoBehaviour
             Objective.gameObject.SetActive(false);
             TimerText.gameObject.SetActive(true);
             GunsLeft.gameObject.SetActive(true);
+            
+
             GunsLeft.text = "Guns left: " + System.Convert.ToString(Character.GunsLeft());
-            GunsLeft.UpdateText();
             return;
         }
 
@@ -82,12 +83,11 @@ public class Startup : MonoBehaviour
             if(timeLeft < 15)
             {
                 TimerText.text += "." + millis;
-                TimerText.multiplier = 5 + Mathf.Sin(Time.realtimeSinceStartup) / 2;
+                float val = 0.9f + Mathf.Sin(Time.realtimeSinceStartup) * 0.1f ;
+                TimerText.gameObject.transform.localScale = new Vector3(val, val);
                 TimerText.color = new UnityEngine.Color(0.6f + 0.4f * (15 - timeLeft) / 15, 0.06657172f, 0.06657172f);
             }
-            TimerText.UpdateText();
             GunsLeft.text = System.Convert.ToString(Character.GunsLeft()) + " guns left";
-            GunsLeft.UpdateText();
         }
     }
 }
