@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Interactable : SpriteOutline
+public class Interactable : Selectable
 {
     public class Interaction
     {

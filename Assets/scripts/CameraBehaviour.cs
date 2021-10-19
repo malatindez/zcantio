@@ -14,7 +14,6 @@ public class CameraBehaviour : MonoBehaviour
     bool highlighted = false;
 
     public Interactable SelectedItem { get; private set; } = null;
-    public Interactable HoveredItem { get; private set; } = null;
 
     private Startup CameraStartup;
 
@@ -32,13 +31,12 @@ public class CameraBehaviour : MonoBehaviour
     {
         if (SelectedItem != null)
         {
-            SelectedItem.Selected = false;
-            SelectedItem = null;
+            SelectedItem.Deselect();
         }
-        if (item != null)
+        SelectedItem = item;
+        if (SelectedItem != null)
         {
-            SelectedItem = item;
-            SelectedItem.Selected = true;
+            SelectedItem.Select();
         }
     }
 
@@ -66,14 +64,14 @@ public class CameraBehaviour : MonoBehaviour
         foreach (Weapon weapon in _character.WeaponList)
         {
             weapon.transform.localScale *= 1.5f;
-            weapon.Highlight = true;
+            weapon.EnableHighlighting(Color.red);
         }
     }
     void RemoveHighlighting()
     {
         foreach (Weapon weapon in _character.WeaponList)
         {
-            weapon.Highlight = false;
+            weapon.DisableHighlighting(Color.red);
             weapon.transform.localScale *= 1f/1.5f;
         }
 
@@ -96,19 +94,12 @@ public class CameraBehaviour : MonoBehaviour
             highlighted = false;
         }
 
-        if (HoveredItem != null)
-        {
-            HoveredItem.Hovered = false;
-            HoveredItem = null;
-        }
-
                     
         Interactable item = null;
         RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-        if (hit.collider != null && hit.collider.gameObject.TryGetComponent<Interactable>(out item))
+        if(hit.collider != null)
         {
-            HoveredItem = item;
-            HoveredItem.Hovered = true;
+            item = hit.collider.gameObject.GetComponent<Interactable>();
         }
         if (Input.GetMouseButton(0))
         {
